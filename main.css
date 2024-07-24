@@ -1,0 +1,32 @@
+.col, .timer {
+  justify-content: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;  
+}
+
+.timer {
+  font-size: 150px;
+  font-weight: bold;
+}
+
+.letters {
+  margin-top: 10px;
+  text-shadow: 2px 0 #666, -2px 0 #666, 0 2px #666, 0 -2px #666, 1px 1px #666, -1px -1px #666, 1px -1px #666, -1px 1px #666;
+}
+
+span {
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 2px solid black;
+  border-radius: 10px;
+  min-width: 100px;
+  display: inline-table;
+  margin-left: 5px;
+      font-size: 100px;
+}
+
