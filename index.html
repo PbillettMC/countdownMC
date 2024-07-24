@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Countdown Letters Game</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="styles.css">
+      <script src="script.js"></script>
+  </head>
+  <body>
+      <div class="container-fluid container">
+          <h1>Countdown Letters Game</h1>
+          <div class="row">
+            <div class="col">
+              <button id="generateV" class="btn btn-primary">Vowel</button>
+            </div>
+            <div class="col">
+              <button id="generateC" class="btn btn-info">Consonant</button>
+            </div>
+  		  </div>
+          
+          <div class="jumbotron">
+            <h1 class="display-4">
+              <div id="letters" class="letters"></div>
+            </h1>
+              <div id="timer" class="timer"></div>
+          </div>
+          
+          <div class="row">
+          	<div class="col">
+            	<button id="timerB" class="btn btn-success" hidden=true>Start Timer</button>
+            </div>
+            <div class="col">
+          		<button id="resetB" class="btn btn-danger" hidden=true>Reset</button>
+          	</div>
+          </div>
+          
+      </div>
+  </body>
+  <script>
+    const letters = [];
+    const generateV = document.getElementById('generateV');
+    generateV.addEventListener('click', generateLetters);
+    generateV.myParam = 'Vow';
+    const generateC = document.getElementById('generateC');
+    generateC.addEventListener('click', generateLetters);
+    generateC.myParam = 'Con';
+    const resetB = document.getElementById('resetB');
+    resetB.addEventListener('click', resetLetters);
+    const timerB = document.getElementById('timerB');
+    timerB.addEventListener('click', startTimer);
+ 
+    function generateLetters(evt) {
+        const vowels = ['A', 'E', 'I', 'O', 'U'];
+        const consonants = [
+            'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'
+        ];
+    
+        if (evt.currentTarget.myParam == 'Vow') {
+            const randomIndex = Math.floor(Math.random() * vowels.length);
+            letters.push(vowels[randomIndex]);
+        } else {
+            const randomIndex = Math.floor(Math.random() * consonants.length);
+            letters.push(consonants[randomIndex]);
+        }
+
+        document.getElementById('letters').innerText = letters.join(' ');
+      if (letters.length > 8) {
+        generateV.disabled = true;
+        generateC.disabled = true;
+        resetB.hidden = false;
+        timerB.hidden = false;
+      }
+    }
+    
+    function resetLetters(){
+      letters.length = 0;
+      resetB.hidden = true;
+      timerB.hidden = true;
+      generateV.disabled = false;
+      generateC.disabled = false;
+      document.getElementById('letters').innerText = "";
+    }
+    
+    function startTimer(){
+    	  resetB.hidden = true;
+        timerB.hidden = true;
+        var countDownDate = addMinutes(new Date(),5);
+        var x = setInterval(function() {
+          var now = new Date().getTime();
+          var distance = countDownDate - now;
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
+
+          // If the count down is over
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("timer").innerHTML = "TIME UP!";
+          }
+        }, 1000)
+        }
+
+        function addMinutes(date, minutes) {
+            return new Date(date.getTime() + minutes*60000);
+        }
+    </script>
+</html>
