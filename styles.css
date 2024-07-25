@@ -30,3 +30,6 @@ span {
       font-size: 100px;
 }
 
+img, svg {
+    max-width: 40%;
+}
