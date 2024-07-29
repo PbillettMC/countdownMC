@@ -35,6 +35,10 @@ img, svg {
 }
 
 .btn-group-lg>.btn, .btn-lg {
-    font-size: 3em;
+    font-size: 3rem;
     width: 100%;
+}
+
+span {
+    background-color: aliceblue;
 }
