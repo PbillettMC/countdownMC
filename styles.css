@@ -33,3 +33,8 @@ span {
 img, svg {
     max-width: 40%;
 }
+
+.btn-group-lg>.btn, .btn-lg {
+    font-size: 3em;
+    width: 100%;
+}
