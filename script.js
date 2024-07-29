@@ -1,14 +1,24 @@
+let timer;
+let timeLeft = 300; // 5 minutes in seconds
+let isPaused = false;
+
 const letters = [];
 const generateV = document.getElementById('generateV');
-generateV.addEventListener('click', generateLetters);
-generateV.myParam = 'Vow';
 const generateC = document.getElementById('generateC');
+const resetB = document.getElementById('resetB');
+const startB = document.getElementById('timerB');
+const pauseB = document.getElementById('pauseB');
+const resumeB = document.getElementById('resumeB');
+const timerElement = document.getElementById('timer');
+
+resetB.addEventListener('click', resetLetters);
+startB.addEventListener('click', startTimer);
+pauseB.addEventListener('click', pauseTimer);
+resumeB.addEventListener('click', resumeTimer);
 generateC.addEventListener('click', generateLetters);
 generateC.myParam = 'Con';
-const resetB = document.getElementById('resetB');
-resetB.addEventListener('click', resetLetters);
-const timerB = document.getElementById('timerB');
-timerB.addEventListener('click', startTimer);
+generateV.addEventListener('click', generateLetters);
+generateV.myParam = 'Vow';
 
 function generateLetters(evt) {
     const vowels = ['A', 'E', 'I', 'O', 'U'];
@@ -39,33 +49,56 @@ function generateLetters(evt) {
 }
 
 function resetLetters(){
-  letters.length = 0;
-  resetB.hidden = true;
-  timerB.hidden = true;
-  generateV.disabled = false;
-  generateC.disabled = false;
-  document.getElementById('letters').innerText = "";
+    letters.length = 0;
+    resetB.hidden = true;
+    timerB.hidden = true;
+    generateV.disabled = false;
+    generateC.disabled = false;
+    document.getElementById('letters').innerText = "";
+    clearInterval(timer);
+    timeLeft = 301;
+    countdown();
 }
 
-function startTimer(){
-  resetB.hidden = true;
-  timerB.hidden = true;
-  var countDownDate = addMinutes(new Date(),5);
-  var x = setInterval(function() {
-    var now = new Date().getTime();
-    var distance = countDownDate - now;
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s";
+function startTimer() {
+    startB.hidden = true;
+    resetB.hidden = true;
+    pauseB.hidden = false;
+    resumeB.hidden = true;
+    timer = setInterval(countdown, 1000);
+}
 
-    // If the count down is over
-    if (distance < 0) {
-      clearInterval(x);
-      document.getElementById("timer").innerHTML = "TIME UP!";
+function pauseTimer() {
+    clearInterval(timer);
+    isPaused = true;
+    resetB.hidden = false;
+    pauseB.hidden = true;
+    resumeB.hidden = false;
+}
+
+function resumeTimer() {
+    timer = setInterval(countdown, 1000);
+    isPaused = false;
+    resetB.hidden = true;
+    pauseB.hidden = false;
+    resumeB.hidden = true;
+}
+
+function countdown() {
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        timerElement.textContent = '00:00';
+        startB.hidden = true;
+        pauseB.hidden = true;
+        alert('Time is up!');
+    } else {
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerElement.textContent = `${pad(minutes)}:${pad(seconds)}`;
     }
-  }, 1000);
 }
 
-function addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
+function pad(value) {
+    return value < 10 ? '0' + value : value;
 }
