@@ -12,6 +12,7 @@ h1 {
 .timer {
   font-size: 150px;
   font-weight: bold;
+  margin-top: -25px;
 }
 
 .letters {
@@ -40,6 +41,6 @@ img, svg {
     width: 100%;
 }
 
-body {
-    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(180,223,255,1) 100%);
+body { 
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(180,223,255,1) 100%);
 }
