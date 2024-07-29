@@ -10,6 +10,30 @@ const startB = document.getElementById('timerB');
 const pauseB = document.getElementById('pauseB');
 const resumeB = document.getElementById('resumeB');
 const timerElement = document.getElementById('timer');
+const vowels = ['A', 'E', 'I', 'O', 'U'];
+const consonants = [
+    { letter: 'B', weight: 3 },
+    { letter: 'C', weight: 5 },
+    { letter: 'D', weight: 6 },
+    { letter: 'F', weight: 3 },
+    { letter: 'G', weight: 6 },
+    { letter: 'H', weight: 5 },
+    { letter: 'J', weight: 3 },
+    { letter: 'K', weight: 5 },
+    { letter: 'L', weight: 7},
+    { letter: 'M', weight: 6 },
+    { letter: 'N', weight: 6 },
+    { letter: 'P', weight: 3 },
+    { letter: 'Q', weight: 1 },
+    { letter: 'R', weight: 6 },
+    { letter: 'S', weight: 6 },
+    { letter: 'T', weight: 9 },
+    { letter: 'V', weight: 3 },
+    { letter: 'W', weight: 2 },
+    { letter: 'X', weight: 1 },
+    { letter: 'Y', weight: 4 },
+    { letter: 'Z', weight: 1 }
+];
 
 resetB.addEventListener('click', resetLetters);
 startB.addEventListener('click', startTimer);
@@ -21,17 +45,13 @@ generateV.addEventListener('click', generateLetters);
 generateV.myParam = 'Vow';
 
 function generateLetters(evt) {
-    const vowels = ['A', 'E', 'I', 'O', 'U'];
-    const consonants = [
-        'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'
-    ];
+    
 
     if (evt.currentTarget.myParam == 'Vow') {
         const randomIndex = Math.floor(Math.random() * vowels.length);
         letters.push(vowels[randomIndex]);
     } else {
-        const randomIndex = Math.floor(Math.random() * consonants.length);
-        letters.push(consonants[randomIndex]);
+        letters.push(getRandomConsonant());
     }
     
     document.getElementById('letters').innerText = letters.join('');
@@ -46,6 +66,18 @@ function generateLetters(evt) {
     resetB.hidden = false;
     timerB.hidden = false;
   }
+}
+
+function getRandomConsonant() {
+    const totalWeight = consonants.reduce((acc, consonant) => acc + consonant.weight, 0);
+    let random = Math.random() * totalWeight;
+
+    for (let consonant of consonants) {
+        if (random < consonant.weight) {
+            return consonant.letter;
+        }
+        random -= consonant.weight;
+    }
 }
 
 function resetLetters(){
