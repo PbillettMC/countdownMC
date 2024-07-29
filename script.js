@@ -52,6 +52,7 @@ function resetLetters(){
     letters.length = 0;
     resetB.hidden = true;
     timerB.hidden = true;
+    resumeB.hidden = true;
     generateV.disabled = false;
     generateC.disabled = false;
     document.getElementById('letters').innerText = "";
