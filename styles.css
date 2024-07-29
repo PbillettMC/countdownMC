@@ -20,6 +20,7 @@ h1 {
 }
 
 span {
+  background-color: aliceblue;
   padding-left: 5px;
   padding-right: 5px;
   border: 2px solid black;
@@ -27,7 +28,7 @@ span {
   min-width: 100px;
   display: inline-table;
   margin-left: 5px;
-      font-size: 100px;
+  font-size: 100px;
 }
 
 img, svg {
@@ -39,8 +40,6 @@ img, svg {
     width: 100%;
 }
 
-background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(180,223,255,1) 100%);
-
-span {
-    background-color: aliceblue;
+background: {
+    radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(180,223,255,1) 100%);
 }
