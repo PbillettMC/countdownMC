@@ -45,19 +45,33 @@ generateV.addEventListener('click', generateLetters);
 generateV.myParam = 'Vow';
 
 function generateLetters(evt) {
-    
+    var letterType = null;
 
     if (evt.currentTarget.myParam == 'Vow') {
         const randomIndex = Math.floor(Math.random() * vowels.length);
         letters.push(vowels[randomIndex]);
+        letterType = "Vowel";
     } else {
         letters.push(getRandomConsonant());
+        letterType = "Consonant";
     }
     
-    document.getElementById('letters').innerText = letters.join('');
-    $(".letters").lettering();
-    $('div span').each(function() {
+    //document.getElementById('letters').innerText = letters.join('');
+    document.getElementById('letters').innerHTML += "<span>" + letters[letters.length - 1] + "</span>";
+    //$(".letters").lettering();
+    var len = $('div span').length;
+    $('div span').each(function(index) {
       var $span = $(this);
+      if (index === (len - 1)) {
+        if (letterType == "Vowel") {
+          $(this).addClass("vowelMove");
+        } else {
+          $(this).addClass("consonantMove");
+        }
+      } else {
+      	$(this).removeClass("vowelMove");
+        $(this).removeClass("consonantMove");
+      }
     });
     
   if (letters.length > 8) {
