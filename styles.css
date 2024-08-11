@@ -34,10 +34,6 @@ span {
   position: relative;
 }
 
-img, svg {
-    max-width: 40%;
-}
-
 .btn-group-lg>.btn, .btn-lg {
     font-size: 3rem;
     width: 100%;
