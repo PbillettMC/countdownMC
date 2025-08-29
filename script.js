@@ -11,6 +11,23 @@ const pauseB = document.getElementById('pauseB');
 const resumeB = document.getElementById('resumeB');
 const timerElement = document.getElementById('timer');
 const lettersContainer = document.getElementById('letters');
+const shuffleB = document.getElementById('shuffleB');
+
+// --- optional: tiny helper styles for smooth FLIP animation ---
+(() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    #letters { position: relative; }
+    #letters span {
+      display: inline-block;          /* needed so transforms don't affect line layout weirdly */
+      will-change: transform;
+    }
+    #letters span.floating {          /* subtle flourish during move */
+      box-shadow: 0 .25rem .75rem rgba(0,0,0,.15);
+    }
+  `;
+  document.head.appendChild(style);
+})();
 
 const vowelWeights = [
     { letter: 'A', weight: 8 },
@@ -50,6 +67,7 @@ pauseB.addEventListener('click', pauseTimer);
 resumeB.addEventListener('click', resumeTimer);
 generateC.addEventListener('click', () => generateLetters(false));
 generateV.addEventListener('click', () => generateLetters(true));
+shuffleB.addEventListener('click', shuffleLetters);
 
 function getRandomLetter(weightedArray) {
     let totalWeight = weightedArray.reduce((sum, item) => sum + item.weight, 0);
@@ -87,6 +105,7 @@ function generateLetters(isVowel) {
         generateC.disabled = true;
         resetB.hidden = false;
         startB.hidden = false;
+        shuffleB.hidden = false;
     }
 }
 
@@ -104,6 +123,7 @@ function resetLetters() {
     startB.hidden = false;
     pauseB.hidden = true;
     resumeB.hidden = true;
+    shuffleB.hidden = true;
 }
 
 function startTimer() {
@@ -148,6 +168,68 @@ function countdown() {
         timeLeft--;
         updateTimerDisplay();
     }
+}
+
+function shuffleLetters() {
+  const container = lettersContainer;
+  const items = Array.from(container.children);
+  if (items.length < 2) return;
+
+  // 1) FIRST: capture current positions
+  const firstRects = items.map(el => el.getBoundingClientRect());
+
+  // 2) Make a shuffled copy of the current DOM nodes (Fisher–Yates)
+  const shuffled = items.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // 3) Reorder the DOM to the new order
+  shuffled.forEach(el => container.appendChild(el));
+
+  // 4) LAST: capture new positions
+  const lastRects = shuffled.map(el => el.getBoundingClientRect());
+
+  // 5) INVERT: set each element's transform to the delta from where it WAS to where it IS
+  shuffled.forEach((el, i) => {
+    const oldIndex = items.indexOf(el);
+    const dx = firstRects[oldIndex].left - lastRects[i].left;
+    const dy = firstRects[oldIndex].top - lastRects[i].top;
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+    // remove any lingering transition so the jump to the inverted transform is instant
+    el.style.transition = 'none';
+  });
+
+  // Force a reflow so the browser registers the transform
+  void container.offsetWidth;
+
+  // 6) PLAY: animate to the final position by removing the transform with a transition
+  shuffled.forEach(el => {
+    el.classList.add('floating');
+    el.style.transition = 'transform 600ms ease, box-shadow 600ms ease';
+    el.style.transform = '';
+    el.addEventListener('transitionend', cleanupOnce);
+  });
+
+  // Keep the JS letters[] in sync with the new order
+  syncLettersArrayFromDOM();
+}
+
+// Transition cleanup
+function cleanupOnce(e) {
+  const el = e.target;
+  el.classList.remove('floating');
+  // leave no inline transition so future shuffles can reapply cleanly
+  el.style.transition = '';
+  el.removeEventListener('transitionend', cleanupOnce);
+}
+
+// Keep letters[] matching the visual order (useful if you rely on it later)
+function syncLettersArrayFromDOM() {
+  const newOrder = Array.from(lettersContainer.children).map(el => el.textContent.trim());
+  letters.length = 0;
+  newOrder.forEach(ch => letters.push(ch));
 }
 
 function updateTimerDisplay() {
